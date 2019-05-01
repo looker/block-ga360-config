@@ -1,4 +1,4 @@
-connection: "@{connection_name}"
+connection: "@{CONNECTION_NAME}"
 # connection: "@{connection_name}"
 
 # include all the views

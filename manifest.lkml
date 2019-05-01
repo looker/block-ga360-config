@@ -1,11 +1,11 @@
 project_name: "block-ga360"
 
 # Used in google_analytics_block.model connection param
-constant: connection_name {
+constant: CONNECTION_NAME {
   value: "looker_app"
 }
 
 # Used in ga_sessions.view sql_table_name
-constant: schema_name {
+constant: SCHEMA_NAME {
   value: "ga360"
 }

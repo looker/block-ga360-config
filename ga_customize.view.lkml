@@ -20,7 +20,7 @@ view: ga_sessions {
 
 
   # SCENARIO 1: Only one property
-  sql_table_name: `@{schema_name}.sessions_*` ;;
+  sql_table_name: `@{SCHEMA_NAME}.sessions_*` ;;
 
   # SCENARIO 2: Multiple properties. The property will dynamically look at the selected dataset using a filter.
   # sql_table_name: {% assign prop = ga_sessions.website_selector._sql %}
