@@ -6,8 +6,12 @@ constant: CONNECTION_NAME {
 }
 
 # Used in ga_sessions.view sql_table_name
-constant: SCHEMA_NAME {
-  value: "ga360"
+constant: GA360_SCHEMA_NAME {
+  value: "ga360_generated_2"
+}
+
+constant: GA360_TABLE_NAME {
+  value: "ga_sessions_*"
 }
 
 #############################################
