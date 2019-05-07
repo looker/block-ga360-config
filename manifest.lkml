@@ -10,6 +10,7 @@ constant: GA360_SCHEMA_NAME {
   value: "ga360_generated_2"
 }
 
+# Make sure to include a note about having _* at the end to include all date partitioned tables
 constant: GA360_TABLE_NAME {
   value: "ga_sessions_*"
 }
