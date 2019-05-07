@@ -1,4 +1,4 @@
-include: "/app-event-ga360/*.view"
+include: "//app-event-ga360/*.view"
 
 explore: ga_sessions {
   extends: [ga_sessions_template]
