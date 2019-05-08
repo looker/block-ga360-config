@@ -20,19 +20,20 @@ view: ga_sessions {
 # For companies with multiple websites, multiple schemas need to be included in the sql_table_name
 # parameter. This pattern is included “sessions.view.lkml” file. Be sure to update the “Property”
 # dimension with all the websites as well.
-#
-#   parameter: single_property {
-#     default_value: "No"
-#   }
-#
+
+  # TODO: If a customer is only using a single property (one website), change default value to "Yes"
+  parameter: single_property {
+    default_value: "Yes"
+  }
+
 #   sql_table_name:
 #   (
 #     SELECT *, 'Property1' as property
-#     FROM `ga360_generated_2.ga_sessions_*`
+#     FROM `@{GA360_SCHEMA_NAME}.@{GA360_TABLE_NAME}`
 #     WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD({{ga_sessions.date_period_start_date_comparison_period._sql}}, INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= {{ ga_sessions.date_period_end_date._sql }}
 #     UNION ALL
 #     SELECT *, 'Property2' as property
-#     FROM `ga360_generated_2.ga_sessions_*`
+#     FROM `@{GA360_SCHEMA_NAME}.@{GA360_TABLE_NAME}`
 #     WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD({{ga_sessions.date_period_start_date_comparison_period._sql}}, INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= {{ ga_sessions.date_period_end_date._sql }}
 #   );;
 
