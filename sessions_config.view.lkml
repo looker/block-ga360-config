@@ -1,7 +1,9 @@
-include: "//app-event-ga360/*.view"
+# include: "//app-event-ga360/*.view"
 
-explore: ga_sessions {
+explore: ga_sessions_config {
   extends: [ga_sessions_template]
+  extension: required
+
 #  always_filter: {
 #     filters: {
 #       field: ga_sessions.date_date
@@ -10,8 +12,9 @@ explore: ga_sessions {
 #   }
 }
 
-view: ga_sessions {
+view: ga_sessions_config {
   extends: [ga_sessions_template]
+  extension: required
 
 # TODO: If the customer has multiple properties use this table name setup. If not see below.
 # Multiple properties
@@ -29,11 +32,11 @@ view: ga_sessions {
   sql_table_name:
   (
     SELECT *, 'Property1' as property
-    FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
+    FROM `{{ ga_sessions.schema_name._sql }}.{{ ga_sessions.ga360_table_name._sql }}`
     WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD(DATE({{ga_sessions.date_period_start_date_comparison_period._sql}}), INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= DATE({{ ga_sessions.date_period_end_date._sql }})
     UNION ALL
     SELECT *, 'Property2' as property
-    FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
+    FROM `{{ ga_sessions.schema_name._sql }}.{{ ga_sessions.ga360_table_name._sql }}`
     WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD(DATE({{ga_sessions.date_period_start_date_comparison_period._sql}}), INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= DATE({{ ga_sessions.date_period_end_date._sql }})
   );;
 
