@@ -32,11 +32,11 @@ view: ga_sessions_config {
   sql_table_name:
   (
     SELECT *, 'Property1' as property
-    FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
+    FROM `ga_sample.ga_sessions`
     WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD(DATE({{ga_sessions.date_period_start_date_comparison_period._sql}}), INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= DATE({{ ga_sessions.date_period_end_date._sql }})
     UNION ALL
     SELECT *, 'Property2' as property
-    FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
+    FROM `ga_sample.ga_sessions`
     WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD(DATE({{ga_sessions.date_period_start_date_comparison_period._sql}}), INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= DATE({{ ga_sessions.date_period_end_date._sql }})
   );;
 
