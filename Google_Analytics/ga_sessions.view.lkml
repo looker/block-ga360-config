@@ -1,19 +1,8 @@
 # include: "//app-event-ga360/*.view"
 
-explore: ga_sessions_config {
-  extends: [ga_sessions_template]
-  extension: required
-
-#  always_filter: {
-#     filters: {
-#       field: ga_sessions.date_date
-#       value: "7 days ago for 7 days"
-#     }
-#   }
-}
 
 view: ga_sessions_config {
-  extends: [ga_sessions_template]
+  extends: [ga_sessions]
   extension: required
 
 # TODO: If the customer has multiple properties use this table name setup. If not see below.
