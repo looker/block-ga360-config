@@ -2,7 +2,7 @@
 
 
 view: ga_sessions_config {
-  extends: [ga_sessions]
+  extends: [ga_sessions_core]
   extension: required
 
 # TODO: If the customer has multiple properties use this table name setup. If not see below.

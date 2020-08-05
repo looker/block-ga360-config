@@ -1,4 +1,4 @@
-project_name: "ga_generated"
+project_name: "block-ga360-config"
 
 ################ Constants ################
 
