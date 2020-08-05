@@ -1,4 +1,4 @@
-view: training_input {
+view: training_input_config {
   extends: [training_input_core]
   extension: required
   # Add view customizations here
