@@ -168,7 +168,7 @@ view: ga_sessions_config {
     description: "URL hits / Sessions"
     group_label: "Goals"
     type: number
-    sql: 1.0 * (${demo_goal_conversions}/NULLIF(${ga_sessions.session_count},0));;
+    sql: 1.0 * (${demo_goal_conversions}/NULLIF(${ga_sessions.visits_total},0));;
     value_format_name: percent_2
   }
 
@@ -176,7 +176,7 @@ view: ga_sessions_config {
     description: "URL hits / Sessions"
     group_label: "Goals"
     type: number
-    sql: 1.0 * (${company_goal_conversions}/NULLIF(${ga_sessions.session_count},0));;
+    sql: 1.0 * (${company_goal_conversions}/NULLIF(${ga_sessions.visits_total},0));;
     value_format_name: percent_2
   }
 
