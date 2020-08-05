@@ -49,37 +49,6 @@ view: ga_sessions_config {
         ;;
   }
 
-# COMMON FILTERS ACROSS ALL ORGANIZATIONS
-# TODO: Customize fileters
-# There are three filters outlined in the sessions.view.lkml file - “has_host”, “has_page”, and
-# “search_keyword”. By default, these filters pull suggestions from their corresponding dimensions.
-# The list of suggestions can get quite large, and often times customers want to limit this. To do so,
-# simply hardcode the suggestions in.
-
-  filter: has_host {
-    suggestable: yes
-    suggest_dimension: hits_page.hostName
-    # suggestions: ["hostName1", "hostName2", "…"]
-    sql: (SELECT h.page.hostName FROM UNNEST(${ga_sessions.hits}) h
-      WHERE {%condition %} h.page.hostName {%endcondition%} LIMIT 1) IS NOT NULL ;;
-  }
-
-
-  filter: has_page {
-    suggestable: yes
-    suggest_dimension: hits_page.pageTitle
-    sql: (SELECT h.page.pageTitle FROM UNNEST(${ga_sessions.hits}) h
-      WHERE {%condition %} h.page.pageTitle {%endcondition%} LIMIT 1) IS NOT NULL ;;
-  }
-
-  filter: search_keyword {
-    suggestable: yes
-    suggest_dimension: trafficSource.keyword
-    sql: (SELECT h.keyword FROM UNNEST([${ga_sessions.trafficSource}]) h
-      WHERE {%condition %} h.keyword {%endcondition%} LIMIT 1) IS NOT NULL ;;
-  }
-
-
 
 # TODO: CUSTOMIZE GOALS HERE ####
 
@@ -103,139 +72,139 @@ view: ga_sessions_config {
       WHERE h.page.pagePath = "/asearch.html" LIMIT 1) IS NOT NULL ;;
   }
 
-  dimension: company_goal_hit {
-    type: yesno
-    sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
-      WHERE h.page.pagePath = "/company" LIMIT 1) IS NOT NULL ;;
-  }
+  # dimension: company_goal_hit {
+  #   type: yesno
+  #   sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
+  #     WHERE h.page.pagePath = "/company" LIMIT 1) IS NOT NULL ;;
+  # }
 
-  dimension: team_goal_hit {
-    type: yesno
-    sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
-      WHERE h.page.pagePath = "/team" LIMIT 1) IS NOT NULL ;;
-  }
+  # dimension: team_goal_hit {
+  #   type: yesno
+  #   sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
+  #     WHERE h.page.pagePath = "/team" LIMIT 1) IS NOT NULL ;;
+  # }
 
 
-  dimension: home_page_goal {
-    type: yesno
-    sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
-      WHERE h.page.pagePath = "/goal" LIMIT 1) IS NOT NULL ;;
-  }
+  # dimension: home_page_goal {
+  #   type: yesno
+  #   sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
+  #     WHERE h.page.pagePath = "/goal" LIMIT 1) IS NOT NULL ;;
+  # }
 
-  dimension: about_page_goal {
-    type: yesno
-    sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
-      WHERE h.page.pagePath = "/about" LIMIT 1) IS NOT NULL ;;
-  }
+  # dimension: about_page_goal {
+  #   type: yesno
+  #   sql: (SELECT h.page.pagePath FROM UNNEST(${ga_sessions.hits}) h
+  #     WHERE h.page.pagePath = "/about" LIMIT 1) IS NOT NULL ;;
+  # }
 
-  dimension: conversion_value {
-    sql: 100 ;;
-  }
+  # dimension: conversion_value {
+  #   sql: 100 ;;
+  # }
 
 
   # value of goal
 
-  dimension: value_of_conversion {
-    type: number
-    hidden: yes
-    sql: 100 ;;
-    value_format_name: usd
-  }
+  # dimension: value_of_conversion {
+  #   type: number
+  #   hidden: yes
+  #   sql: 100 ;;
+  #   value_format_name: usd
+  # }
 
-  # filter for goal completion to mark as converted
+  # # filter for goal completion to mark as converted
 
-  measure: demo_goal_conversions {
-    group_label: "Goals"
-    type: count
-    filters: {
-      field: demo_goal_hit
-      value: "Yes"
-    }
-  }
+  # measure: demo_goal_conversions {
+  #   group_label: "Goals"
+  #   type: count
+  #   filters: {
+  #     field: demo_goal_hit
+  #     value: "Yes"
+  #   }
+  # }
 
-  measure: company_goal_conversions {
-    group_label: "Goals"
-    type: count
-    filters: {
-      field: company_goal_hit
-      value: "Yes"
-    }
-  }
+  # measure: company_goal_conversions {
+  #   group_label: "Goals"
+  #   type: count
+  #   filters: {
+  #     field: company_goal_hit
+  #     value: "Yes"
+  #   }
+  # }
 
   # define conversion rate
 
-  measure: demo_goal_conversion_rate {
-    description: "URL hits / Sessions"
-    group_label: "Goals"
-    type: number
-    sql: 1.0 * (${demo_goal_conversions}/NULLIF(${ga_sessions.visits_total},0));;
-    value_format_name: percent_2
-  }
+  # measure: demo_goal_conversion_rate {
+  #   description: "URL hits / Sessions"
+  #   group_label: "Goals"
+  #   type: number
+  #   sql: 1.0 * (${demo_goal_conversions}/NULLIF(${ga_sessions.visits_total},0));;
+  #   value_format_name: percent_2
+  # }
 
-  measure: company_goal_conversion_rate {
-    description: "URL hits / Sessions"
-    group_label: "Goals"
-    type: number
-    sql: 1.0 * (${company_goal_conversions}/NULLIF(${ga_sessions.visits_total},0));;
-    value_format_name: percent_2
-  }
+  # measure: company_goal_conversion_rate {
+  #   description: "URL hits / Sessions"
+  #   group_label: "Goals"
+  #   type: number
+  #   sql: 1.0 * (${company_goal_conversions}/NULLIF(${ga_sessions.visits_total},0));;
+  #   value_format_name: percent_2
+  # }
 
-  measure: demo_goal_conversion_value {
-    description: "URL Conversions * Value"
-    group_label: "Goals"
-    type: number
-    sql: 1.0 * (${demo_goal_conversions}) * (${value_of_conversion});;
-    value_format_name: usd
-  }
+  # measure: demo_goal_conversion_value {
+  #   description: "URL Conversions * Value"
+  #   group_label: "Goals"
+  #   type: number
+  #   sql: 1.0 * (${demo_goal_conversions}) * (${value_of_conversion});;
+  #   value_format_name: usd
+  # }
 
-  measure: company_goal_conversion_value {
-    description: "URL Conversions * Value"
-    group_label: "Goals"
-    type: number
-    sql: 1.0 * (${company_goal_conversions}) * (${value_of_conversion});;
-    value_format_name: usd
-  }
+  # measure: company_goal_conversion_value {
+  #   description: "URL Conversions * Value"
+  #   group_label: "Goals"
+  #   type: number
+  #   sql: 1.0 * (${company_goal_conversions}) * (${value_of_conversion});;
+  #   value_format_name: usd
+  # }
 
   # TODO: you need to add all the goals here as well
 
-  parameter: goal_selection {
-    type: string
-    suggestions: ["No Selection","Demo","Company"]
-    allowed_value: {value: "No Selection"}
-    allowed_value: {value: "Demo"}
-    allowed_value: {value: "Company"}
-    default_value: "'No Selection'"
-  }
+  # parameter: goal_selection {
+  #   type: string
+  #   suggestions: ["No Selection","Demo","Company"]
+  #   allowed_value: {value: "No Selection"}
+  #   allowed_value: {value: "Demo"}
+  #   allowed_value: {value: "Company"}
+  #   default_value: "'No Selection'"
+  # }
 
-  measure: selected_goal_conversions {
-    type: number
-    sql: {% if goal_selection._parameter_value == "'Demo'" %}${demo_goal_conversions}
-          {% elsif goal_selection._parameter_value == "'Company'" %}${company_goal_conversions}
-          {% elsif goal_selection._parameter_value == "'No Selection'" %}NULL
-          {% endif %} ;;
-    label_from_parameter: goal_selection
-    value_format_name: decimal_0
-  }
+  # measure: selected_goal_conversions {
+  #   type: number
+  #   sql: {% if goal_selection._parameter_value == "'Demo'" %}${demo_goal_conversions}
+  #         {% elsif goal_selection._parameter_value == "'Company'" %}${company_goal_conversions}
+  #         {% elsif goal_selection._parameter_value == "'No Selection'" %}NULL
+  #         {% endif %} ;;
+  #   label_from_parameter: goal_selection
+  #   value_format_name: decimal_0
+  # }
 
-  measure: selected_goal_conversion_rate {
-    type: number
-    sql: {% if goal_selection._parameter_value == "'Demo'" %}${demo_goal_conversion_rate}
-         {% elsif goal_selection._parameter_value == "'Company'" %}${company_goal_conversion_rate}
-         {% elsif goal_selection._parameter_value == "'No Selection'" %}NULL
-          {% endif %} ;;
-    label_from_parameter: goal_selection
-    value_format_name: percent_2
-  }
+  # measure: selected_goal_conversion_rate {
+  #   type: number
+  #   sql: {% if goal_selection._parameter_value == "'Demo'" %}${demo_goal_conversion_rate}
+  #       {% elsif goal_selection._parameter_value == "'Company'" %}${company_goal_conversion_rate}
+  #       {% elsif goal_selection._parameter_value == "'No Selection'" %}NULL
+  #         {% endif %} ;;
+  #   label_from_parameter: goal_selection
+  #   value_format_name: percent_2
+  # }
 
-  measure: selected_goal_conversion_value {
-    type: number
-    sql: {% if goal_selection._parameter_value == "'Demo'" %}${demo_goal_conversion_value}
-         {% elsif goal_selection._parameter_value == "'Company'" %}${company_goal_conversion_value}
-         {% elsif goal_selection._parameter_value == "'No Selection'" %}NULL
-          {% endif %} ;;
-    label_from_parameter: goal_selection
-    value_format_name: usd
-  }
+  # measure: selected_goal_conversion_value {
+  #   type: number
+  #   sql: {% if goal_selection._parameter_value == "'Demo'" %}${demo_goal_conversion_value}
+  #       {% elsif goal_selection._parameter_value == "'Company'" %}${company_goal_conversion_value}
+  #       {% elsif goal_selection._parameter_value == "'No Selection'" %}NULL
+  #         {% endif %} ;;
+  #   label_from_parameter: goal_selection
+  #   value_format_name: usd
+  # }
 
 
 
