@@ -1,5 +1,5 @@
 view: totals_config {
-  extends: [totals]
+  extends: [totals_core]
   extension: required
 
   # Add view customizations here

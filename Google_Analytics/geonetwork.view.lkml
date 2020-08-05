@@ -1,5 +1,5 @@
 view: geonetwork_config {
-  extends: [geonetwork]
+  extends: [geonetwork_core]
   extension: required
 
   # Add view customizations here

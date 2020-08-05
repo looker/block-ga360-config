@@ -1,5 +1,5 @@
 view: goals_config {
-  extends: [goals]
+  extends: [goals_core]
   extension: required
 
   # Add view customizations here
