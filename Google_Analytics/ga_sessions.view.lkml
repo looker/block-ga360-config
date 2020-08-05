@@ -1,4 +1,4 @@
-# include: "//app-event-ga360/*.view"
+
 
 
 view: ga_sessions_config {
