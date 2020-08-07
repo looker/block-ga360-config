@@ -1,4 +1,4 @@
-project_name: "block-ga360-config"
+project_name: "block-ga-360-config"
 
 ################ Constants ################
 
