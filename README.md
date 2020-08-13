@@ -19,7 +19,7 @@ Google Analytics Premium Data Structure
 
 Google Analytics Premium (GA360) data is exported (in this case, through [Transfer Services](https://cloud.google.com/bigquery/transfer/) in the format of a single flat table with a new entry for each session. Rather than creating new tables for each entity attribute, Google places aggregate or attribute information in nested fields in the single table.
 
-For more information on Nested Fields, and why Google chooses to use them, please refer to this overview on Why [Nesting is so Cool](https://discourse.looker.com/t/why-nesting-is-so-cool/4182).
+For more information on Nested Fields, and why Google chooses to use them, please refer to this overview on Why [Nesting is so Cool](https://looker.com/blog/why-nesting-is-so-cool).
 
 Google's documentation on the data included in the export can be found [here](https://support.google.com/analytics/answer/3437719?hl=en).
 
@@ -70,6 +70,17 @@ Google Analytics provides great, out-of-the-box capabilities to create user segm
 Data Discrepency in User Count Between GA UI and GA in BQ - The user count between the GA UI and the data exported to BQ will always have an expected 1-2% discrepency. This is because, the Google Analytics UI estimates the total number of users using a specific user counting algorithm for all reports except unsampled reports, whereas a proper BigQuery user count query which counts distinct fullVisitorIds will literally count all unique fullVisitorIds. Hence there can be up to a 2% discrepancy between the Google Analytics UI and BigQuery export. However, if the discrepancy is more than that, then you should contact your GA360 support Agency.
 
 Data Discrepency in Session Count Between GA UI and GA in BQ - In the GA UI, sessions are only counted if they contain an interaction hit. If the hit is set to non-interaction=true, then it wouldn’t initiate a session to be captured for GA. However, in BigQuery we get all the hit level data. Therefore, we can get all those hits where non-interaction=true. Now, in order to compare the total sessions between GA and BigQuery, we need to check all the sessions with interaction hits. That’s the reason, we’ve included this condition.
+
+# FAQ
+1) Can we combine GA360 data from multiple sites for multiple properties?
+
+Yes in the ga_sessions_config you will see a commented out sql_table_name that allows you to union your properties together
+
+ 2) Can we support only sessions tables in GA360, or can we also support Enhanced ECommerce data from GA360?
+
+In v1 we have not added in the enhanced ecommerce data but it is available and you can add it to the existing block
+
+
 
 # Coming Soon
 Looker will offer an out of the box data action to enable you to push data back into your GA console.
