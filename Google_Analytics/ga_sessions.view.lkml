@@ -18,23 +18,26 @@ view: ga_sessions_config {
     default_value: "Yes"
   }
 
-  # sql_table_name:
-  # (
-  #   SELECT *, 'Property1' as property
-  #   FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
-  #   WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD(DATE({{ga_sessions.date_period_start_date_comparison_period._sql}}), INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= DATE({{ ga_sessions.date_period_end_date._sql }})
-  #   UNION ALL
-  #   SELECT *, 'Property2' as property
-  #   FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
-  #   WHERE PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) >= DATE_ADD(DATE({{ga_sessions.date_period_start_date_comparison_period._sql}}), INTERVAL -1 DAY) AND PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d')) <= DATE({{ ga_sessions.date_period_end_date._sql }})
-  # );;
+  sql_table_name:
+  (
+    SELECT *, 'Property1' as property, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_suffix
+    FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
+    WHERE {% condition date_filter %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %} OR {% condition partition_date %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %}
+    UNION ALL
+    SELECT *, 'Property2' as property, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_suffix
+    FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
+    WHERE {% condition date_filter %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %} OR {% condition partition_date %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %}
+  );;
 
 # TODO: Update the sql_table_name with the customer’s schema name.
 # Single property
-  sql_table_name: `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}` ;;
+  # sql_table_name: SELECT *, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_suffix FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}` ;;
 
-
-
+filter: date_filter {
+  hidden: yes
+  type: date
+  default_value: "@{EXPLORE_DATE_FILTER}"
+}
 
 # TODO: FOR MULTIPLE PROPERTY USE-CASES, USE THE BELOW DIMENSION TO MAP THE WEBSITE NAMES TO THEIR PROPERTIES.
 
