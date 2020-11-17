@@ -20,24 +20,61 @@ view: ga_sessions_config {
 
   sql_table_name:
   (
-    SELECT *, 'Property1' as property, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_suffix
+    SELECT *, 'Property1' as property, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_date
     FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
-    WHERE {% condition date_filter %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %} OR {% condition partition_date %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %}
+    WHERE {% condition partition_filter %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %}
     UNION ALL
-    SELECT *, 'Property2' as property, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_suffix
+    SELECT *, 'Property2' as property, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_date
     FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}`
-    WHERE {% condition date_filter %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %} OR {% condition partition_date %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %}
+    WHERE {% condition partition_filter %} TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) {% endcondition %}
   );;
 
 # TODO: Update the sql_table_name with the customer’s schema name.
 # Single property
-  # sql_table_name: SELECT *, TIMESTAMP(PARSE_DATE('%Y%m%d', REGEXP_EXTRACT(_TABLE_SUFFIX,r'^\d\d\d\d\d\d\d\d'))) AS partition_suffix FROM `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}` ;;
+  # sql_table_name: `@{SCHEMA_NAME}.@{GA360_TABLE_NAME}` ;;
 
-filter: date_filter {
-  hidden: yes
-  type: date
-  default_value: "@{EXPLORE_DATE_FILTER}"
-}
+
+  filter: partition_filter {
+    type: date
+    default_value: "@{EXPLORE_DATE_FILTER}"
+  }
+
+  dimension_group: partition {
+    # Date that is parsed from the table name. Required as a filter to avoid accidental massive queries
+    label: ""
+    view_label: "Session"
+    description: "Date based on the day the session was added to the database. Matches date in Google Analytics UI, but may not match 'Session Start Date'."
+    type: time
+    timeframes: [
+      date,
+      day_of_week,
+      day_of_week_index,
+      day_of_month,
+      day_of_year,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      week,
+      month,
+      month_name,
+      month_num,
+      quarter,
+      quarter_of_year,
+      week_of_year,
+      year
+    ]
+    # sql: TIMESTAMP(
+    #         PARSE_DATE(
+    #           '%Y%m%d'
+    #             , REGEXP_EXTRACT(
+    #               _TABLE_SUFFIX
+    #                 , r'^\d\d\d\d\d\d\d\d'
+    #             )
+    #         )
+    #       );;
+    sql: ${TABLE}.partition_date ;;
+    can_filter: no
+    convert_tz: no
+  }
 
 # TODO: FOR MULTIPLE PROPERTY USE-CASES, USE THE BELOW DIMENSION TO MAP THE WEBSITE NAMES TO THEIR PROPERTIES.
 
