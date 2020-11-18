@@ -22,4 +22,11 @@ explore: ga_sessions_config {
 explore: future_input_config {
   extends: [future_input_core]
   extension: required
+  # always_filter: {
+  #   filters: {
+  #     # field: partition_date
+  #     field: partition_filter
+  #     value: "@{EXPLORE_DATE_FILTER}"
+  #   }
+  # }
 }
