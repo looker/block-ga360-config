@@ -72,7 +72,7 @@ view: ga_sessions_config {
     #         )
     #       );;
     sql: ${TABLE}.partition_date ;;
-    can_filter: no
+    # can_filter: no
     convert_tz: no
   }
 
