@@ -8,10 +8,10 @@ explore: ga_sessions_config {
 
   always_filter: {
     filters: {
-      # For single property use partition_date
+      # S1 TODO: For single property use partition_date
       field: partition_date
 
-      # For multi property use partition_filter
+      # S2 TODO: For multi property use partition_filter instead of partition_date
       # field: partition_filter
       value: "@{EXPLORE_DATE_FILTER}"
     }
