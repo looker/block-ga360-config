@@ -1,6 +1,6 @@
 include: "/*/*.view.lkml"
 include: "/Google_Analytics/Custom_Views/*.view.lkml"
-
+connection: "looker-private-demo"
 
 explore: ga_sessions_config {
   extends: [ga_sessions_core]
