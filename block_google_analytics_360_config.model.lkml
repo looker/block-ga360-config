@@ -25,4 +25,9 @@ explore: ga_sessions_config {
 explore: future_input_config {
   extends: [future_input_core]
   extension: required
+  join: future_purchase_prediction {
+    type: left_outer
+    sql_on: ${future_input.full_visitor_id} = ${future_purchase_prediction.full_visitor_id} ;;
+    relationship: one_to_one
+  }
 }
