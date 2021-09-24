@@ -1,0 +1,24 @@
+include: "//@{CONFIG_PROJECT_NAME}/Google_Analytics/custom_dimensions.view.lkml"
+include: "Custom_Views/goals.view.lkml"
+include: "//@{CONFIG_PROJECT_NAME}/Google_Analytics/hits.view.lkml"
+
+view: custom_dimensions {
+  extends: [custom_dimensions_config]
+}
+
+
+view: custom_dimensions_core {
+  extension: required
+
+  view_label: "Custom Dimensions"
+
+}
+
+view: hits {
+  extends: [hits_config]
+}
+
+view: hits_core {
+  extension: required
+  extends: [goals]
+  view_label: "Hits"
